@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hana Memoria - Penguji</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --accent: #38bdf8;
+            --text: #f8fafc;
+        }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: var(--bg); color: var(--text);
+            display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0;
+        }
+        .form-container {
+            background: #1e293b; padding: 2rem; border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3); width: 90%; max-width: 400px;
+        }
+        h2 { border-bottom: 2px solid var(--accent); padding-bottom: 10px; font-weight: 300; margin-top: 0;}
+        .input-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-size: 0.9rem; color: #94a3b8; }
+        input, select { 
+            width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #334155;
+            background: #0f172a; color: white; box-sizing: border-box;
+        }
+        button {
+            width: 100%; padding: 12px; background: var(--accent); border: none;
+            border-radius: 6px; color: #0f172a; font-weight: bold; cursor: pointer;
+            transition: 0.3s; margin-top: 10px;
+        }
+        button:hover { opacity: 0.8; transform: translateY(-2px); }
+        .pesan-ramah { font-size: 0.85rem; color: #94a3b8; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Hana Memoria ✨</h2>
+    <div class="pesan-ramah">Yuk, tes sistem pesanan kita! 😊 Masukkan data uji coba di bawah ini ya.</div>
+    
+    <form id="orderForm">
+        <div class="input-group">
+            <label>Nama Pelanggan</label>
+            <input type="text" name="nama" placeholder="Contoh: Budi" required>
+        </div>
+
+        <div class="input-group">
+            <label>No. WhatsApp</label>
+            <input type="text" name="whatsapp" placeholder="0812..." required>
+        </div>
+
+        <div class="input-group">
+            <label>Jenis Produk</label>
+            <select name="jenis" required>
+                <option value="Gantungan Kunci">Gantungan Kunci</option>
+                <option value="Figura">Figura</option>
+                <option value="Album">Album</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label>Upload Foto 📸</label>
+            <input type="file" id="fileInput" required>
+        </div>
+
+        <button type="submit" id="submitBtn">Kirim Uji Coba 🚀</button>
+    </form>
+    <p id="status" style="margin-top: 15px; font-size: 0.9rem; text-align: center;"></p>
+</div>
+
+<script>
+    // ⚠️ MASUKKAN URL WEB APP APPS SCRIPT DI BAWAH INI ⚠️
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwiQACt6hkINpICwHBemONEUbpv5gsP3YwQS5Jq-wcR8Ln6OkGz2PQMFV4nFarTyCqCdQ/exec';
+    
+    const form = document.getElementById('orderForm');
+
+    form.addEventListener('submit', e => {
+        e.preventDefault();
+        const submitBtn = document.getElementById('submitBtn');
+        const statusTxt = document.getElementById('status');
+        
+        if(scriptURL === 'URL_WEB_APP_KAMU_DISINI') {
+            statusTxt.style.color = '#ef4444';
+            statusTxt.innerText = '⚠️ Jangan lupa ganti URL Web App dulu di kodenya ya!';
+            return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.innerText = 'Mengirim... ⏳';
+        statusTxt.innerText = 'Sedang memproses, tunggu sebentar ya...';
+        statusTxt.style.color = '#94a3b8';
+
+        const fileInput = document.getElementById('fileInput').files[0];
+        const reader = new FileReader();
+
+        reader.onload = function() {
+            const bytes = reader.result.split(',')[1];
+            const data = {
+                fileName: fileInput.name,
+                contentType: fileInput.type,
+                bytes: bytes
+            };
+
+            const formData = new FormData(form);
+            const params = new URLSearchParams(formData).toString();
+
+            fetch(`${scriptURL}?${params}`, {
+                method: 'POST',
+                body: JSON.stringify(data)
+            })
+            .then(response => response.text())
+            .then(result => {
+                statusTxt.style.color = '#38bdf8';
+                statusTxt.innerText = '✨ ' + result;
+                form.reset();
+            })
+            .catch(error => {
+                statusTxt.style.color = '#ef4444';
+                statusTxt.innerText = 'Waduh, ada error: ' + error.message + ' 😥';
+            })
+            .finally(() => {
+                submitBtn.disabled = false;
+                submitBtn.innerText = 'Kirim Uji Coba 🚀';
+            });
+        };
+        reader.readAsDataURL(fileInput);
+    });
+</script>
+
+</body>
+</html>
