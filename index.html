@@ -82,11 +82,6 @@
         const submitBtn = document.getElementById('submitBtn');
         const statusTxt = document.getElementById('status');
         
-        if(scriptURL === 'https://script.google.com/macros/s/AKfycbyUM5Sn62XYIUeaE4StuGilqGiMiSzDAm--WFNbAKHIstFpaQRHHc2CRIF7g5HR8h33ZA/exec') {
-            statusTxt.style.color = '#ef4444';
-            statusTxt.innerText = '⚠️ Jangan lupa ganti URL Web App dulu di kodenya ya!';
-            return;
-        }
 
         submitBtn.disabled = true;
         submitBtn.innerText = 'Mengirim... ⏳';
